@@ -1,39 +1,148 @@
-# Chain of Responsibility: ATM Dispense System
+# BPI ATM System - Chain of Responsibility Pattern
 
-An implementation of the **Chain of Responsibility** design pattern simulating a Bank of the Philippine Islands (BPI) ATM that dispenses specific cash denominations.
+## Problem
+We will design an ATM system for BPI (Bank of the Philippine Islands) that dispenses cash in denominations of 1000 pesos, 500 pesos, and 100 pesos bills. The system should follow the Chain of Responsibility design pattern to handle the dispensing of cash requests efficiently.
 
-## 📌 Project Overview
-This project demonstrates how to distribute responsibilities among multiple objects. The system processes cash withdrawal requests by passing them through a chain of handlers (1000s, 500s, and 100s) until the full amount is dispensed.
+## Source Code
+public class BPI_Atm {
+    public static void main(String[] args) {
+        ATMDispenseChain atmDispenser = new ATMDispenseChain();
+        int amount = 2970; // Amount to be dispensed, 270, 250
+        if (amount % 10 != 0) {
+            System.out.println("Amount should be in multiples of 100s.");
+            
+        } else
+        atmDispenser.dispense(new Currency(amount));
+    }
+}
 
-### Module Objectives
-*   **Distribution of Responsibility:** Enable multiple objects to handle a single request.
-*   **Maintainability:** Promote the Single Responsibility Principle for each object in the chain.
-*   **Dynamic Handling:** Explore how request handling is decided at runtime.
 
----
-
-## 🛠 Elements of the Pattern
-*   **Request (`Currency`):** The data structure containing the amount to be processed.
-*   **Handler (`DispenseChain`):** The interface defining how to link handlers and process requests.
-*   **Concrete Handlers:** `Peso1000Dispenser`, `Peso500Dispenser`, and `Peso100Dispenser`.
-*   **Chain Controller (`ATMDispenseChain`):** The class that initializes the sequence and starts the process.
-
----
-
-## 🚀 How It Works
-1.  The **Client** (`BPI_Atm`) sends an amount to the chain.
-2.  The **1000-Peso Handler** checks if it can dispense any bills. It passes the **remainder** to the next link.
-3.  The **500-Peso Handler** takes the remainder, processes it, and passes the rest down.
-4.  The **100-Peso Handler** completes the transaction.
-
----
-
-## 💻 Code Structure
-
-### 1. The Request Object
-```java
 public class Currency {
     private int amount;
-    public Currency(int amt) { this.amount = amt; }
-    public int getAmount() { return this.amount; }
+
+
+    public Currency(int amt) {
+        this.amount = amt;
+    }
+
+
+    public int getAmount() {
+        return this.amount;
+    }
+}
+
+
+public interface DispenseChain {
+    void setNextChain(DispenseChain nextChain);
+    void dispense(Currency currency);
+}
+
+
+public class ATMDispenseChain implements DispenseChain {
+    private DispenseChain nextChain;
+
+
+    public ATMDispenseChain() {
+        // Initialize the chain
+        this.nextChain = new Peso1000Dispenser();
+        DispenseChain c2 = new Peso500Dispenser();
+	//200-peso
+        DispenseChain c3 = new Peso100Dispenser();
+	//50-peso dispenser
+	//20-peso dispenser
+
+
+        // Set the chain of responsibility
+        nextChain.setNextChain(c2);
+        c2.setNextChain(c3);
+    }
+
+
+    public void dispense(Currency currency) {
+        nextChain.dispense(currency);
+    }
+
+
+    @Override
+    public void setNextChain(DispenseChain nextChain) {
+        this.nextChain = nextChain;
+    }
+}
+
+
+public class Peso100Dispenser implements DispenseChain {
+    private DispenseChain chain;
+
+
+    @Override
+    public void setNextChain(DispenseChain nextChain) {
+        this.chain = nextChain;
+    }
+
+
+    @Override
+    public void dispense(Currency cur) {
+        if (cur.getAmount() >= 100) {
+            int num = cur.getAmount() / 100;
+            int remainder = cur.getAmount() % 100;
+            System.out.println("Dispensing " + num + " 100 bills");
+            if (remainder != 0) {
+                this.chain.dispense(new Currency(remainder));
+            }
+        } else {
+            this.chain.dispense(cur);
+        }
+    }
+}
+
+
+public class Peso500Dispenser implements DispenseChain {
+    private DispenseChain chain;
+
+
+    @Override
+    public void setNextChain(DispenseChain nextChain) {
+        this.chain = nextChain;
+    }
+
+
+    @Override
+    public void dispense(Currency cur) {
+        if (cur.getAmount() >= 500) {
+            int num = cur.getAmount() / 500; // 1
+            int remainder = cur.getAmount() % 500; //300
+            System.out.println("Dispensing " + num + " 500 bills");
+            if (remainder != 0) {
+                this.chain.dispense(new Currency(remainder));
+            }
+        } else {
+            this.chain.dispense(cur);
+        }
+    }
+}
+
+
+public class Peso1000Dispenser implements DispenseChain {
+    private DispenseChain chain;
+
+
+    @Override
+    public void setNextChain(DispenseChain nextChain) {
+        this.chain = nextChain;
+    }
+
+
+    @Override
+    public void dispense(Currency cur) {
+        if (cur.getAmount() >= 1000) {
+            int num = cur.getAmount() / 1000;
+            int remainder = cur.getAmount() % 1000; //800
+            System.out.println("Dispensing " + num + " 1000 bills");
+            if (remainder != 0) {
+                this.chain.dispense(new Currency(remainder));
+            }
+        } else {
+            this.chain.dispense(cur);
+        }
+    }
 }

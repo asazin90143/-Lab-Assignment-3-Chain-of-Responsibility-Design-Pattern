@@ -2,7 +2,7 @@
 
 ## Problem
 
-We will design an ATM system for BPI (Bank of the Philippine Islands) that dispenses cash in denominations of 1000 pesos, 500 pesos, and 100 pesos bills. The system should follow the Chain of Responsibility design pattern to handle the dispensing of cash requests efficiently.
+We will design an ATM system for BPI (Bank of the Philippine Islands) that dispenses cash in denominations of 1000 pesos, 500 pesos, 200 pesos, 100 pesos, 50 pesos, and 20 pesos bills. The system should follow the Chain of Responsibility design pattern to handle the dispensing of cash requests efficiently.
 
 ## Source Code
 
@@ -78,7 +78,7 @@ public class Peso1000Dispenser implements DispenseChain {
 
 ## Implementation Details
 
-In this implementation, ATMDispenseChain class handles the dispensing logic for BPI's ATM system with denominations of 1000, 500, and 100 peso bills. The BPI_Atm class allows users to adjust (hard-coded) an amount and initiates the dispensing process using the Chain of Responsibility pattern.
+In this implementation, ATMDispenseChain class handles the dispensing logic for BPI's ATM system with denominations of 1000, 500, 200, 100, 50, and 20 peso bills. The BPI_Atm class allows users to adjust (hard-coded) an amount and initiates the dispensing process using the Chain of Responsibility pattern.
 
 This design ensures that the ATM system dispenses cash in the specified denominations according to the requested amount.
 
@@ -86,7 +86,7 @@ This design ensures that the ATM system dispenses cash in the specified denomina
 
 In the provided example, the elements of the Chain of Responsibility pattern can be identified as follows:
 
-* **Handler:** The handler objects are the concrete classes that implement the CurrencyDispenser abstract class. In this case, there are three handlers: Peso1000Dispenser, Peso500Dispenser, and Peso100Dispenser. Each handler is responsible for dispensing a specific denomination of currency.
+* **Handler:** The handler objects are the concrete classes that implement the DispenseChain interface. In this case, there are six handlers: Peso1000Dispenser, Peso500Dispenser, Peso200Dispenser, Peso100Dispenser, Peso50Dispenser, and Peso20Dispenser. Each handler is responsible for dispensing a specific denomination of currency.
 * **Chain:** The chain is represented by the ATMDispenserChain class. It sets up the sequence of handlers by linking them together using the setNextChain() method. The chain is responsible for passing the request along the sequence of handlers until one of them handles it.
 * **Request:** The request is represented by the dispense() method call made on the first handler in the chain. In this case, the request is to dispense a specific amount of currency.
 * **Client:** The client is the ATMDispenseChain class that creates and initializes the chain of handlers. It sends the request to the first handler in the chain by calling the dispense() method.
@@ -114,8 +114,9 @@ With the default amount of 2970 pesos, the output should be:
 
 Dispensing 2 1000 bills
 Dispensing 1 500 bills
-Dispensing 4 100 bills
-Cannot dispense remaining amount: 70 pesos
+Dispensing 2 200 bills
+Dispensing 1 50 bills
+Dispensing 1 20 bills
 
 ### Testing with Different Amounts
 
@@ -124,5 +125,6 @@ You can modify the `amount` variable in the `BPI_Atm.java` file to test with dif
 * 3000 pesos -  Dispensing 3 1000 bills
 * 1600 pesos - Dispensing 1 1000 bill, 1 500 bill, 1 100 bill
 * 500 pesos - Dispensing 1 500 bill
+* 270 pesos - Dispensing 1 200 bill, 1 50 bill, 1 20 bill
 
-**Note:** The amount must be a multiple of 10 for the system to process it. Amounts that cannot be perfectly dispensed using 1000, 500, and 100 peso bills will display a message showing the remaining amount.
+**Note:** Amounts that cannot be perfectly dispensed using 1000, 500, 200, 100, 50, and 20 peso bills will display a message showing the remaining amount.

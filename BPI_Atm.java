@@ -1,11 +1,7 @@
 public class BPI_Atm {
     public static void main(String[] args) {
         ATMDispenseChain atmDispenser = new ATMDispenseChain();
-        int amount = 2970; // Amount to be dispensed
-        if (amount % 10 != 0) {
-            System.out.println("Amount should be in multiples of 100s.");
-        } else {
-            atmDispenser.dispense(new Currency(amount));
-        }
+        int amount = 3467; // Amount to be dispensed
+        atmDispenser.dispense(new Currency(amount));
     }
 }

@@ -16,52 +16,43 @@ public class BPI_Atm {
     }
 }
 
-
 public class Currency {
     private int amount;
-
 
     public Currency(int amt) {
         this.amount = amt;
     }
-
 
     public int getAmount() {
         return this.amount;
     }
 }
 
-
 public interface DispenseChain {
     void setNextChain(DispenseChain nextChain);
     void dispense(Currency currency);
 }
 
-
 public class ATMDispenseChain implements DispenseChain {
     private DispenseChain nextChain;
-
 
     public ATMDispenseChain() {
         // Initialize the chain
         this.nextChain = new Peso1000Dispenser();
         DispenseChain c2 = new Peso500Dispenser();
-	//200-peso
+        //200-peso
         DispenseChain c3 = new Peso100Dispenser();
-	//50-peso dispenser
-	//20-peso dispenser
-
+        //50-peso dispenser
+        //20-peso dispenser
 
         // Set the chain of responsibility
         nextChain.setNextChain(c2);
         c2.setNextChain(c3);
     }
 
-
     public void dispense(Currency currency) {
         nextChain.dispense(currency);
     }
-
 
     @Override
     public void setNextChain(DispenseChain nextChain) {
@@ -69,16 +60,13 @@ public class ATMDispenseChain implements DispenseChain {
     }
 }
 
-
 public class Peso100Dispenser implements DispenseChain {
     private DispenseChain chain;
-
 
     @Override
     public void setNextChain(DispenseChain nextChain) {
         this.chain = nextChain;
     }
-
 
     @Override
     public void dispense(Currency cur) {
@@ -95,16 +83,13 @@ public class Peso100Dispenser implements DispenseChain {
     }
 }
 
-
 public class Peso500Dispenser implements DispenseChain {
     private DispenseChain chain;
-
 
     @Override
     public void setNextChain(DispenseChain nextChain) {
         this.chain = nextChain;
     }
-
 
     @Override
     public void dispense(Currency cur) {
@@ -121,16 +106,13 @@ public class Peso500Dispenser implements DispenseChain {
     }
 }
 
-
 public class Peso1000Dispenser implements DispenseChain {
     private DispenseChain chain;
-
 
     @Override
     public void setNextChain(DispenseChain nextChain) {
         this.chain = nextChain;
     }
-
 
     @Override
     public void dispense(Currency cur) {
@@ -146,3 +128,19 @@ public class Peso1000Dispenser implements DispenseChain {
         }
     }
 }
+
+## Implementation Details
+In this implementation, ATMDispenseChain class handles the dispensing logic for BPI's ATM system with denominations of 1000, 500, and 100 peso bills. The BPI_Atm class allows users to adjust (hard-coded) an amount and initiates the dispensing process using the Chain of Responsibility pattern.
+
+This design ensures that the ATM system dispenses cash in the specified denominations according to the requested amount.
+
+
+
+## Pattern Identification
+In the provided example, the elements of the Chain of Responsibility pattern can be identified as follows:
+
+* **Handler:** The handler objects are the concrete classes that implement the CurrencyDispenser abstract class. In this case, there are three handlers: Peso1000Dispenser, Peso500Dispenser, and Peso100Dispenser. Each handler is responsible for dispensing a specific denomination of currency.
+* **Chain:** The chain is represented by the ATMDispenserChain class. It sets up the sequence of handlers by linking them together using the setNextChain() method. The chain is responsible for passing the request along the sequence of handlers until one of them handles it.
+* **Request:** The request is represented by the dispense() method call made on the first handler in the chain. In this case, the request is to dispense a specific amount of currency.
+* **Client:** The client is the ATMDispenseChain class that creates and initializes the chain of handlers. It sends the request to the first handler in the chain by calling the dispense() method.
+* **Context:** The context includes the ATMDispenseChain class, which manages the chain of handlers and ensures that the request is passed along the chain until it is handled.
